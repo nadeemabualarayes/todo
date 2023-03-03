@@ -28,7 +28,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
 
     _controller = AnimationController(vsync: this);
-    Future.delayed(const Duration(seconds: 2), () {
+    Future.delayed(const Duration(seconds: 4), () {
       if (mounted) {
         _onAnimationCompleted(context);
       }
@@ -42,13 +42,25 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
         decoration: const BoxDecoration(
           color: kBackgroundColor,
         ),
-        child: Center(
-            child: SvgPicture.asset(
-          "assets/logo.svg",
-          color: kRedColor,
-          width: 100,
-          height: 100,
-        )),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Center(
+                child: SvgPicture.asset(
+              "assets/logo.svg",
+              color: kRedColor,
+              width: 150,
+              height: 150,
+            )),
+            const Text(
+              "UpTodo",
+              style: TextStyle(
+                  color: kWhiteColor,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 30.0),
+            )
+          ],
+        ),
       ),
     );
   }
