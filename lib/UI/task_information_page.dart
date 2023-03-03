@@ -3,8 +3,10 @@ import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:todotask/UI/Sheets/category_sheet.dart';
+import 'package:todotask/UI/Sheets/delete_todo_sheet.dart';
 import 'package:todotask/UI/home_screen.dart';
 import '../utils/colors.dart';
+import 'Sheets/edit_todo_sheet.dart';
 
 class TaskInformationScreen extends StatefulWidget {
   const TaskInformationScreen({Key key}) : super(key: key);
@@ -22,7 +24,7 @@ class _TaskInformationScreenState extends State<TaskInformationScreen> {
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
@@ -32,9 +34,13 @@ class _TaskInformationScreenState extends State<TaskInformationScreen> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
                       child: Container(
                         height: 30,
+                        width: 40,
+                        alignment: Alignment.center,
                         decoration: const BoxDecoration(
                           borderRadius: BorderRadius.all(
                             Radius.circular(6),
@@ -51,7 +57,7 @@ class _TaskInformationScreenState extends State<TaskInformationScreen> {
                                 textAlign: TextAlign.left,
                                 style: TextStyle(
                                   color: kWhiteColor,
-                                  fontSize: 12,
+                                  fontSize: 14,
                                   fontWeight: FontWeight.normal,
                                 ),
                               ),
@@ -64,9 +70,13 @@ class _TaskInformationScreenState extends State<TaskInformationScreen> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        //TODO : EDIT STATUS ON DATABASE
+                      },
                       child: Container(
                         height: 30,
+                        width: 160,
+                        alignment: Alignment.center,
                         decoration: const BoxDecoration(
                           borderRadius: BorderRadius.all(
                             Radius.circular(6),
@@ -83,7 +93,7 @@ class _TaskInformationScreenState extends State<TaskInformationScreen> {
                                 textAlign: TextAlign.left,
                                 style: TextStyle(
                                   color: kWhiteColor,
-                                  fontSize: 12,
+                                  fontSize: 14,
                                   fontWeight: FontWeight.normal,
                                 ),
                               ),
@@ -95,23 +105,40 @@ class _TaskInformationScreenState extends State<TaskInformationScreen> {
                   )
                 ],
               ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    'Do Math Homework',
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                      color: kWhiteColor,
-                      fontSize: 20,
-                      fontWeight: FontWeight.normal,
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: const [
+                        Text(
+                          'Do Math Homework',
+                          textAlign: TextAlign.start,
+                          style: TextStyle(
+                            color: kWhiteColor,
+                            fontSize: 20,
+                            fontWeight: FontWeight.normal,
+                          ),
+                        ),
+                        Text(
+                          'Do chapter 2 to 5 for next week',
+                          textAlign: TextAlign.start,
+                          style: TextStyle(
+                            color: kWhiteColor,
+                            fontSize: 18,
+                            fontWeight: FontWeight.normal,
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: GestureDetector(
-                      onTap: () async {},
+                    GestureDetector(
+                      onTap: () {
+                        EditTodoSheet.show(context);
+                      },
                       child: SvgPicture.asset(
                         "assets/edit.svg",
                         color: kWhiteColor,
@@ -119,15 +146,7 @@ class _TaskInformationScreenState extends State<TaskInformationScreen> {
                         height: 30,
                       ),
                     ),
-                  ),
-                ],
-              ),
-              const Text(
-                'Do chapter 2 to 5 for next week',
-                style: TextStyle(
-                  color: kWhiteColor,
-                  fontSize: 16,
-                  fontWeight: FontWeight.normal,
+                  ],
                 ),
               ),
               Row(
@@ -278,6 +297,7 @@ class _TaskInformationScreenState extends State<TaskInformationScreen> {
               InkWell(
                 onTap: () {
                   // TODO: Delete task form database
+                  DeleteTodoSheet.show(context);
                 },
                 child: Wrap(
                   crossAxisAlignment: WrapCrossAlignment.center,
