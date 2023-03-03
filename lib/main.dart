@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/get_navigation.dart';
-import 'package:provider/provider.dart';
-import 'Pages/splash_page.dart';
+import 'UI/splash_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -26,7 +25,6 @@ class _MyAppState extends State<MyApp> {
       title: 'Todo',
       getPages: [
         GetPage(name: '/SplashPage', page: () => const SplashPage()),
-        // GetPage(name: '/HomeScreen', page: () => const HomeScreen()),
       ],
       initialRoute: '/SplashPage',
       debugShowCheckedModeBanner: false,

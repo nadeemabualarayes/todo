@@ -1,10 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:todotask/Pages/create_category_page.dart';
+import 'package:todotask/UI/create_category_page.dart';
 import 'package:todotask/utils/colors.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
 class CategorySheet extends StatefulWidget {
   static Future<dynamic> show(
