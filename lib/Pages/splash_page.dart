@@ -48,7 +48,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
             Center(
                 child: SvgPicture.asset(
               "assets/logo.svg",
-              color: kRedColor,
+              color: kPurpleColor,
               width: 150,
               height: 150,
             )),

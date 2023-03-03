@@ -3,6 +3,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:todotask/utils/colors.dart';
 
+import 'home_screen.dart';
+
 class BiometricPage extends StatefulWidget {
   const BiometricPage({Key key}) : super(key: key);
 
@@ -29,7 +31,7 @@ class _BiometricPageState extends State<BiometricPage> {
                     "assets/logo.svg",
                     width: 100,
                     height: 180,
-                    color: kRedColor,
+                    color: kPurpleColor,
                   ),
                 ),
               ),
@@ -40,6 +42,12 @@ class _BiometricPageState extends State<BiometricPage> {
                 alignment: Alignment.bottomCenter,
                 child: GestureDetector(
                   onTap: () async {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => const HomeScreen(),
+                      ),
+                    );
+
                     Fluttertoast.showToast(
                         msg: "you cant",
                         toastLength: Toast.LENGTH_LONG,
@@ -55,7 +63,7 @@ class _BiometricPageState extends State<BiometricPage> {
                       padding: const EdgeInsets.all(20.0),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(8),
-                        color: kRedColor,
+                        color: kPurpleColor,
                       ),
                       child: const Center(
                           child: Text(

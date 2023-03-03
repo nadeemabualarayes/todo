@@ -22,7 +22,6 @@ dependencies:
   syncfusion_flutter_calendar: "20.4.44"
   syncfusion_flutter_datepicker: "20.4.44"
   syncfusion_flutter_core: "20.4.44"
-  omni_datetime_picker: ^0.1.4
   font_awesome_flutter: ^10.4.0
   flutter_svg: ^1.1.6
   fluttertoast: "8.1.2"
