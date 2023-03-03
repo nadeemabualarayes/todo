@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:todotask/Pages/Sheets/todo_sheet.dart';
 
 import '../utils/colors.dart';
+import 'calender_page.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key key}) : super(key: key);
@@ -17,11 +18,9 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          //TodoSheet.show(context);
-          var event = await TodoSheet.show(
+          await TodoSheet.show(
             context,
           );
-          print(event);
         },
         backgroundColor: kPurpleColor,
         child: const Icon(Icons.add),
@@ -39,7 +38,13 @@ class _HomeScreenState extends State<HomeScreen> {
             child: AspectRatio(
                 aspectRatio: 0.8,
                 child: GestureDetector(
-                  onTap: () async {},
+                  onTap: () async {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => const CalenderPage(),
+                      ),
+                    );
+                  },
                   child: SvgPicture.asset(
                     "assets/calender.svg",
                     color: kWhiteColor,
