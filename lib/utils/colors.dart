@@ -4,6 +4,9 @@ const kBackgroundColor = Color(0xFF100F0F);
 const kPurpleColor = Color(0xFF8687E7);
 const kWhiteColor = Color(0xFFFFFFFF);
 const kGrayColor = Color(0xff363636);
+const Color bluishClr = Color(0xFF4e5ae8);
+const Color orangeClr = Color(0xCFFF8746);
+const Color pinkClr = Color(0xFFff4667);
 const kTextColor = Color(0xffAFAFAF);
 //const kBackgroundColor = Color(0xFF343434);
 

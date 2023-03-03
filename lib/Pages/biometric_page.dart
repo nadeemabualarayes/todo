@@ -53,8 +53,8 @@ class _BiometricPageState extends State<BiometricPage> {
                         toastLength: Toast.LENGTH_LONG,
                         gravity: ToastGravity.BOTTOM,
                         timeInSecForIosWeb: 1,
-                        backgroundColor: Colors.grey[300],
-                        textColor: Colors.red,
+                        backgroundColor: kWhiteColor,
+                        textColor: kPurpleColor,
                         fontSize: 16.0);
                   },
                   child: Padding(

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:todotask/Pages/Sheets/category_sheet.dart';
 import 'package:todotask/utils/colors.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
@@ -189,7 +190,11 @@ class _TodoSheetState extends State<TodoSheet> {
                             child: AspectRatio(
                                 aspectRatio: 0.8,
                                 child: GestureDetector(
-                                  onTap: () async {},
+                                  onTap: () async {
+                                    var event = await CategorySheet.show(
+                                      context,
+                                    );
+                                  },
                                   child: SvgPicture.asset(
                                     "assets/tag.svg",
                                     color: kWhiteColor,
