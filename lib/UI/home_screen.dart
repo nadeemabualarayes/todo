@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:todotask/UI/Sheets/todo_sheet.dart';
 import 'package:todotask/UI/task_information_page.dart';
+import 'package:todotask/controllers/category_controller.dart';
+import 'package:todotask/controllers/task_controller.dart';
 import '../utils/colors.dart';
 import 'calender_page.dart';
 
@@ -13,6 +16,23 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final TaskController _taskController = Get.put(TaskController());
+  bool event;
+  @override
+  void initState() {
+    Future.delayed(
+        const Duration(
+          seconds: 0,
+        ), () async {
+      await _taskController.getTasks();
+      setState(() {
+        _taskController.getTasks();
+      });
+    });
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -59,10 +79,11 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
-        body:
+        body: (_taskController.taskList.isNotEmpty)
+            ?
             // Todo : when i have data the layout will be change
-            const NewHomePage(),
-        //const OriginalHomePage(),
+            const NewHomePage()
+            : const OriginalHomePage(),
       ),
     );
   }
@@ -122,8 +143,28 @@ class NewHomePage extends StatefulWidget {
 
 class _NewHomePageState extends State<NewHomePage> {
   TextEditingController search = TextEditingController();
-  String dropdownValue = 'Dog';
+  String dropdownValue = 'All';
   bool _isChecked = false;
+  final TaskController _taskController = Get.put(TaskController());
+  final CategoryController _categoryController = Get.put(CategoryController());
+  IconData iconData;
+  @override
+  void initState() {
+    Future.delayed(
+        const Duration(
+          seconds: 0,
+        ), () async {
+      await _taskController.getTasks();
+      await _categoryController.getCategories();
+      setState(() {
+        _taskController.getTasks();
+        _categoryController.getCategories();
+      });
+    });
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -176,7 +217,7 @@ class _NewHomePageState extends State<NewHomePage> {
                 padding: const EdgeInsets.all(16.0),
                 child: SizedBox(
                   height: 50,
-                  width: 100,
+                  width: 120,
                   child: DropdownButtonFormField(
                     decoration: const InputDecoration(
                       enabledBorder: InputBorder.none,
@@ -194,10 +235,25 @@ class _NewHomePageState extends State<NewHomePage> {
                     onChanged: (String newValue) {
                       setState(() {
                         dropdownValue = newValue;
+                        // TODO:
+                        print(dropdownValue);
+                        if (dropdownValue == "All") {
+                          _taskController.getTasks();
+                          _taskController.refresh();
+                        } else if (dropdownValue == "Today") {
+                          _taskController.getTodayTasks();
+                          _taskController.refresh();
+                        } else if (dropdownValue == "Complete") {
+                          _taskController.getCompleteTasks();
+                          _taskController.refresh();
+                        }
                       });
                     },
-                    items: <String>['Dog', 'Cat', 'Tiger', 'Lion']
-                        .map<DropdownMenuItem<String>>((String value) {
+                    items: <String>[
+                      'All',
+                      'Today',
+                      'Complete',
+                    ].map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
                         child: Text(
@@ -211,105 +267,141 @@ class _NewHomePageState extends State<NewHomePage> {
               ),
             ],
           ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: InkWell(
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const TaskInformationScreen(),
-                ));
-              },
-              child: Container(
-                  width: double.infinity,
-                  height: 70,
-                  decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(4)),
-                    color: kGrayColor,
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Checkbox(
-                        value: _isChecked,
-                        onChanged: (value) {
-                          setState(() {
-                            _isChecked = value;
-                            print(_isChecked);
-                          });
-                        },
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: const <Widget>[
-                              Text(
-                                'Tack out dogs',
-                                style: TextStyle(
-                                  color: kTextColor,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.normal,
-                                ),
+          Obx(
+            () => SizedBox(
+              height: 500,
+              child: ListView.builder(
+                padding: const EdgeInsets.all(16.0),
+                itemBuilder: (context, index) {
+                  _isChecked =
+                      (_taskController.taskList[index].isCompleted == 0)
+                          ? false
+                          : true;
+                  String storedIconDataString = _categoryController
+                      .categoryList[
+                          _taskController.taskList[index].categoryId - 1]
+                      .icon;
+                  List<String> parts = storedIconDataString.split(',');
+                  int iconName = int.parse(parts[0]);
+                  String iconFontFamily = parts[1];
+                  iconData = IconData(
+                    iconName,
+                    fontFamily: iconFontFamily,
+                    fontPackage: null,
+                    matchTextDirection: false,
+                  );
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const TaskInformationScreen(),
+                        ));
+                      },
+                      child: Container(
+                          width: double.infinity,
+                          height: 70,
+                          decoration: const BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(4)),
+                            color: kGrayColor,
+                          ),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Checkbox(
+                                value: _isChecked,
+                                onChanged: (value) async {
+                                  setState(() {
+                                    _isChecked = value;
+                                  });
+                                  await _taskController.markTaskAsCompleted(
+                                      task: _taskController.taskList[index],
+                                      status: (_isChecked) ? 1 : 0);
+                                },
                               ),
-                              Text(
-                                'Today At 18:20',
-                                style: TextStyle(
-                                  color: kTextColor,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.normal,
-                                ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: <Widget>[
+                                      Text(
+                                        _taskController.taskList[index].title,
+                                        style: const TextStyle(
+                                          color: kTextColor,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.normal,
+                                        ),
+                                      ),
+                                      Text(
+                                        _taskController.taskList[index].date,
+                                        style: const TextStyle(
+                                          color: kTextColor,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.normal,
+                                        ),
+                                      ),
+                                    ]),
                               ),
-                            ]),
-                      ),
-                      const SizedBox(
-                        width: 80,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: SizedBox(
-                            width: 100,
-                            height: 29,
-                            child: Container(
-                              decoration: const BoxDecoration(
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(4),
-                                  topRight: Radius.circular(4),
-                                  bottomLeft: Radius.circular(4),
-                                  bottomRight: Radius.circular(4),
-                                ),
-                                color: Color.fromRGBO(255, 127, 127, 1),
+                              const SizedBox(
+                                width: 80,
                               ),
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 4),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  // Container(
-                                  //     width: 14,
-                                  //     height: 14,
-                                  //     decoration: const BoxDecoration(
-                                  //       color: Color.fromRGBO(255, 128, 128, 1),
-                                  //     ),
-                                  //     child: SvgPicture.asset(
-                                  //         'assets/images/vector.svg',
-                                  //         semanticsLabel: 'vector')),
-                                  const SizedBox(width: 5),
-                                  const Text(
-                                    'Home',
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      color: kWhiteColor,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.normal,
-                                    ),
-                                  ),
-                                ],
+                              Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: SizedBox(
+                                    width: 100,
+                                    height: 29,
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: const BorderRadius.all(
+                                          Radius.circular(4),
+                                        ),
+                                        color: Color(int.parse(
+                                            _categoryController
+                                                .categoryList[_taskController
+                                                        .taskList[index]
+                                                        .categoryId -
+                                                    1]
+                                                .color)),
+                                      ),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8, vertical: 4),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: <Widget>[
+                                          Icon(iconData),
+                                          const SizedBox(width: 5),
+                                          Text(
+                                            _categoryController
+                                                .categoryList[_taskController
+                                                        .taskList[index]
+                                                        .categoryId -
+                                                    1]
+                                                .name,
+                                            textAlign: TextAlign.left,
+                                            style: const TextStyle(
+                                              color: kWhiteColor,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.normal,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    )),
                               ),
-                            )),
-                      ),
-                    ],
-                  )),
+                            ],
+                          )),
+                    ),
+                  );
+                },
+                itemCount: _taskController.taskList.length,
+              ),
             ),
           )
         ],

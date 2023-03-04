@@ -1,12 +1,10 @@
-import 'package:flutter/foundation.dart';
-
 class Task {
   int id;
   String title;
   String note;
   int isCompleted;
   String date;
-  //Category category;
+  int categoryId;
 
   Task({
     this.id,
@@ -14,7 +12,7 @@ class Task {
     this.note,
     this.isCompleted,
     this.date,
-    //   this.category,
+    this.categoryId,
   });
 
   Map<String, dynamic> toMap() {
@@ -24,7 +22,7 @@ class Task {
       'note': note,
       'isCompleted': isCompleted,
       'date': date,
-      //   'category': category,
+      'categoryId': categoryId,
     };
   }
 
@@ -34,6 +32,6 @@ class Task {
     note = json['note'];
     isCompleted = json['isCompleted'];
     date = json['date'];
-    //  category = json['category'];
+    categoryId = json['categoryId'];
   }
 }

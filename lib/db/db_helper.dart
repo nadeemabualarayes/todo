@@ -5,14 +5,13 @@ import 'package:todotask/models/task.dart';
 
 class DBHelper {
   Database _db;
-  final int _version = 3;
+  final int _version = 1;
   final String _tableName = 'tasks';
   final String _tableCategory = 'categories';
 
   Future<Database> get db async {
     if (_db == null) {
       _db = await initDb();
-
       return _db;
     } else {
       return _db;
@@ -34,7 +33,7 @@ class DBHelper {
 
   Future<void> _onCreate(Database db, int version) async {
     await db.execute(
-        'CREATE TABLE $_tableName(id INTEGER PRIMARY KEY,title TEXT,note TEXT,date TEXT,isCompleted INTEGER);');
+        'CREATE TABLE $_tableName(id INTEGER PRIMARY KEY,title TEXT,note TEXT,date TEXT,isCompleted INTEGER,categoryId INTEGER);');
     await db.execute(
         'CREATE TABLE $_tableCategory(id INTEGER PRIMARY KEY,name TEXT,icon TEXT,color TEXT);');
   }
@@ -63,11 +62,11 @@ class DBHelper {
     return await mydb.delete(_tableName, where: 'id = ?', whereArgs: [id]);
   }
 
-  Future<int> update(int id) async {
+  Future<int> update(int id, int status) async {
     Database mydb = await db;
     print('Update ====');
     return await mydb.rawUpdate(
-        'UPDATE $_tableName SET isCompleted = ? WHERE id = ?', [1, id]);
+        'UPDATE $_tableName SET isCompleted = ? WHERE id = ?', [status, id]);
   }
 
   Future<List<Map<String, Object>>> query(String tableName) async {
