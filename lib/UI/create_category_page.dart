@@ -47,6 +47,8 @@ class _addCategoryWidgetState extends State<addCategoryWidget> {
   List<Color> colorList = [bluishClr, pinkClr, orangeClr];
   int _selectedColor = 0;
   Icon _icon;
+  String iconInformation;
+  String colorCode;
   final CategoryController _categoryController = Get.put(CategoryController());
 
   @override
@@ -165,7 +167,17 @@ class _addCategoryWidgetState extends State<addCategoryWidget> {
                           onTap: () {
                             setState(() {
                               _selectedColor = index;
-                              print(colorList[_selectedColor].toString());
+                              print(colorList[_selectedColor]
+                                  .toString()
+                                  .split("0x")
+                                  .last
+                                  .split(")")
+                                  .first);
+
+                              colorCode =
+                                  "0x${colorList[_selectedColor].toString().split("0x").last.split(")").first}";
+                              Color color = Color(int.parse(colorCode));
+                              print(color);
                             });
                           },
                           borderRadius: BorderRadius.circular(50),
@@ -221,12 +233,12 @@ class _addCategoryWidgetState extends State<addCategoryWidget> {
                   onTap: () async {
                     //TODO: ADD TO DATABASE -> COLOR AND NAME AND ICON
 
-                    _categoryController.addCategory(
+                    await _categoryController.addCategory(
                       category: Category(
                         id: null,
                         name: name.text,
-                        icon: _icon,
-                        color: colorList[_selectedColor].toString(),
+                        icon: iconInformation,
+                        color: colorCode,
                       ),
                     );
 
@@ -238,6 +250,8 @@ class _addCategoryWidgetState extends State<addCategoryWidget> {
                         backgroundColor: kWhiteColor,
                         textColor: kPurpleColor,
                         fontSize: 16.0);
+
+                    Navigator.pop(context);
                   },
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15.0),
@@ -272,11 +286,16 @@ class _addCategoryWidgetState extends State<addCategoryWidget> {
 
   _pickIcon() async {
     IconData icon = await FlutterIconPicker.showIconPicker(context,
-        iconPackModes: [IconPack.cupertino]);
-
+        iconPackModes: [IconPack.material]);
     _icon = Icon(icon);
+
+    IconData iconData = icon;
+    String iconName = iconData.codePoint.toString();
+    String iconFontFamily = iconData.fontFamily;
+    String iconString = String.fromCharCode(iconData.codePoint);
+    String iconDataString = "$iconName,$iconFontFamily,$iconString";
+    iconInformation = iconDataString;
+
     setState(() {});
-    print(_icon.icon.toString());
-    debugPrint('Picked Icon:  $icon');
   }
 }

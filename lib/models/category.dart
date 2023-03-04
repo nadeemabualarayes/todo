@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 class Category {
   int id;
   String name;
-  Icon icon;
+  String icon;
   String color;
 
   Category({

@@ -5,7 +5,7 @@ import 'package:todotask/models/task.dart';
 
 class DBHelper {
   Database _db;
-  final int _version = 2;
+  final int _version = 3;
   final String _tableName = 'tasks';
   final String _tableCategory = 'categories';
 
@@ -36,7 +36,7 @@ class DBHelper {
     await db.execute(
         'CREATE TABLE $_tableName(id INTEGER PRIMARY KEY,title TEXT,note TEXT,date TEXT,isCompleted INTEGER);');
     await db.execute(
-        'CREATE TABLE $_tableCategory(id INTEGER PRIMARY KEY,name TEXT,icon TEXT,color INTEGER);');
+        'CREATE TABLE $_tableCategory(id INTEGER PRIMARY KEY,name TEXT,icon TEXT,color TEXT);');
   }
 
   _onUpgrade(Database db, int oldversion, int newversion) {

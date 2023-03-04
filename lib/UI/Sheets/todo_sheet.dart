@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:todotask/UI/Sheets/category_sheet.dart';
 import 'package:todotask/controllers/task_controller.dart';
@@ -41,6 +42,7 @@ class _TodoSheetState extends State<TodoSheet> {
       TextEditingController();
   final TaskController _taskController = Get.put(TaskController());
   DateTime date;
+  int categoryId;
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -198,9 +200,20 @@ class _TodoSheetState extends State<TodoSheet> {
                                 aspectRatio: 0.8,
                                 child: GestureDetector(
                                   onTap: () async {
-                                    var event = await CategorySheet.show(
+                                    categoryId = await CategorySheet.show(
                                       context,
                                     );
+                                    if (categoryId == null) {
+                                      Fluttertoast.showToast(
+                                          msg: "Please Select Category",
+                                          toastLength: Toast.LENGTH_LONG,
+                                          gravity: ToastGravity.BOTTOM,
+                                          timeInSecForIosWeb: 1,
+                                          backgroundColor: kWhiteColor,
+                                          textColor: kPurpleColor,
+                                          fontSize: 16.0);
+                                    }
+                                    print(categoryId);
                                   },
                                   child: SvgPicture.asset(
                                     "assets/tag.svg",
@@ -228,6 +241,7 @@ class _TodoSheetState extends State<TodoSheet> {
                                         note: _taskDescriptionController.text,
                                         isCompleted: 0,
                                         date: DateFormat.yMd().format(date),
+                                        //todo : add categoryId
                                       ),
                                     );
                                   },

@@ -4,7 +4,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:todotask/UI/create_category_page.dart';
 import 'package:todotask/controllers/category_controller.dart';
-import 'package:todotask/models/category.dart';
 import 'package:todotask/utils/colors.dart';
 
 class CategorySheet extends StatefulWidget {
@@ -35,14 +34,12 @@ class CategorySheet extends StatefulWidget {
 }
 
 class _CategorySheetState extends State<CategorySheet> {
-  // int myItems = 10;
-  int lastIndex;
   final CategoryController _categoryController = Get.put(CategoryController());
-
+  IconData iconData;
+  int categoryId;
   @override
   void initState() {
     _categoryController.getCategories();
-    lastIndex = _categoryController.categoryList.length;
     super.initState();
   }
 
@@ -60,16 +57,35 @@ class _CategorySheetState extends State<CategorySheet> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  width: 50,
-                  alignment: Alignment.center,
-                  child: const Text(
-                    "Choose Category",
-                    style: TextStyle(color: kWhiteColor, fontSize: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      alignment: Alignment.center,
+                      child: const Text(
+                        "Choose Category",
+                        style: TextStyle(color: kWhiteColor, fontSize: 20),
+                      ),
+                    ),
                   ),
-                ),
+                  InkWell(
+                    onTap: () {
+                      navigator.pop();
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => const AddCategoryScreen(),
+                        ),
+                      );
+                    },
+                    child: const Icon(
+                      Icons.add,
+                      color: kWhiteColor,
+                      size: 30,
+                    ),
+                  ),
+                ],
               ),
               const Padding(
                 padding: EdgeInsets.all(8.0),
@@ -88,42 +104,40 @@ class _CategorySheetState extends State<CategorySheet> {
                     crossAxisSpacing: 5.0,
                     mainAxisSpacing: 5.0,
                   ),
-                  itemCount: _categoryController.categoryList.length + 1,
+                  itemCount: _categoryController.categoryList.length,
                   itemBuilder: (context, index) {
+                    String storedIconDataString =
+                        _categoryController.categoryList[index].icon;
+                    List<String> parts = storedIconDataString.split(',');
+                    int iconName = int.parse(parts[0]);
+                    String iconFontFamily = parts[1];
+                    iconData = IconData(
+                      iconName,
+                      fontFamily: iconFontFamily,
+                      fontPackage: null,
+                      matchTextDirection: false,
+                    );
+
                     return InkWell(
                       onTap: () {
-                        if (index == lastIndex) {
-                          // todo : open new dialog to add new category
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (_) => const AddCategoryScreen(),
-                            ),
-                          );
-                        } else {
-                          // get index and name and icon to save it when add to database
-                          print(index);
-                        }
+                        categoryId = _categoryController.categoryList[index].id;
                       },
                       child: Column(
                         children: [
                           Container(
-                            width: 80,
-                            height: 80,
+                            width: 70,
+                            height: 70,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8),
-                              color: kPurpleColor,
+                              color: Color(int.parse(_categoryController
+                                  .categoryList[index].color)),
                             ),
-                            child: (index == lastIndex)
-                                ? Icon(Icons.add)
-                                : Icon(Icons.offline_bolt),
+                            child: Icon(iconData),
                           ),
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
-                              (index == lastIndex)
-                                  ? "Add Category"
-                                  : _categoryController
-                                      .categoryList[index].name,
+                              _categoryController.categoryList[index].name,
                               style: const TextStyle(color: kWhiteColor),
                             ),
                           ),
@@ -162,14 +176,26 @@ class _CategorySheetState extends State<CategorySheet> {
                   ),
                   GestureDetector(
                     onTap: () async {
-                      Fluttertoast.showToast(
-                          msg: "done",
-                          toastLength: Toast.LENGTH_LONG,
-                          gravity: ToastGravity.BOTTOM,
-                          timeInSecForIosWeb: 1,
-                          backgroundColor: kWhiteColor,
-                          textColor: kPurpleColor,
-                          fontSize: 16.0);
+                      if (categoryId == null) {
+                        Fluttertoast.showToast(
+                            msg: "Please Select Category",
+                            toastLength: Toast.LENGTH_LONG,
+                            gravity: ToastGravity.BOTTOM,
+                            timeInSecForIosWeb: 1,
+                            backgroundColor: kWhiteColor,
+                            textColor: kPurpleColor,
+                            fontSize: 16.0);
+                      } else {
+                        Navigator.pop(context, categoryId);
+                        Fluttertoast.showToast(
+                            msg: "Category Selected",
+                            toastLength: Toast.LENGTH_LONG,
+                            gravity: ToastGravity.BOTTOM,
+                            timeInSecForIosWeb: 1,
+                            backgroundColor: kWhiteColor,
+                            textColor: kPurpleColor,
+                            fontSize: 16.0);
+                      }
                     },
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 15.0),
