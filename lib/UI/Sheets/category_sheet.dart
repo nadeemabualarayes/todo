@@ -1,7 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:todotask/UI/create_category_page.dart';
+import 'package:todotask/controllers/category_controller.dart';
+import 'package:todotask/models/category.dart';
 import 'package:todotask/utils/colors.dart';
 
 class CategorySheet extends StatefulWidget {
@@ -33,7 +36,15 @@ class CategorySheet extends StatefulWidget {
 
 class _CategorySheetState extends State<CategorySheet> {
   // int myItems = 10;
-  int lastIndex = 9;
+  int lastIndex;
+  final CategoryController _categoryController = Get.put(CategoryController());
+
+  @override
+  void initState() {
+    _categoryController.getCategories();
+    lastIndex = _categoryController.categoryList.length;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +88,7 @@ class _CategorySheetState extends State<CategorySheet> {
                     crossAxisSpacing: 5.0,
                     mainAxisSpacing: 5.0,
                   ),
-                  itemCount: 10,
+                  itemCount: _categoryController.categoryList.length + 1,
                   itemBuilder: (context, index) {
                     return InkWell(
                       onTap: () {
@@ -90,7 +101,7 @@ class _CategorySheetState extends State<CategorySheet> {
                           );
                         } else {
                           // get index and name and icon to save it when add to database
-
+                          print(index);
                         }
                       },
                       child: Column(
@@ -102,12 +113,17 @@ class _CategorySheetState extends State<CategorySheet> {
                               borderRadius: BorderRadius.circular(8),
                               color: kPurpleColor,
                             ),
-                            child: const Icon(Icons.add),
+                            child: (index == lastIndex)
+                                ? Icon(Icons.add)
+                                : Icon(Icons.offline_bolt),
                           ),
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
-                              "index: $index",
+                              (index == lastIndex)
+                                  ? "Add Category"
+                                  : _categoryController
+                                      .categoryList[index].name,
                               style: const TextStyle(color: kWhiteColor),
                             ),
                           ),

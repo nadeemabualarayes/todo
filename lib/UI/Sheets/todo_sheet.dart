@@ -1,9 +1,13 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:todotask/UI/Sheets/category_sheet.dart';
+import 'package:todotask/controllers/task_controller.dart';
+import 'package:todotask/models/task.dart';
 import 'package:todotask/utils/colors.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:intl/intl.dart';
 
 class TodoSheet extends StatefulWidget {
   static Future<dynamic> show(
@@ -35,7 +39,8 @@ class _TodoSheetState extends State<TodoSheet> {
   final TextEditingController _taskNameController = TextEditingController();
   final TextEditingController _taskDescriptionController =
       TextEditingController();
-
+  final TaskController _taskController = Get.put(TaskController());
+  DateTime date;
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -170,10 +175,12 @@ class _TodoSheetState extends State<TodoSheet> {
                                           ),
                                         ),
                                         showTitleActions: true,
-                                        onChanged: (date) {
+                                        onChanged: (datee) {
+                                      date = datee;
                                       print(
                                           'change $date in time zone ${date.timeZoneOffset.inHours}');
-                                    }, onConfirm: (date) {
+                                    }, onConfirm: (datee) {
+                                      date = datee;
                                       print('confirm $date');
                                     }, currentTime: DateTime.now());
                                   },
@@ -213,7 +220,17 @@ class _TodoSheetState extends State<TodoSheet> {
                             child: AspectRatio(
                                 aspectRatio: 0.8,
                                 child: GestureDetector(
-                                  onTap: () async {},
+                                  onTap: () async {
+                                    _taskController.addTask(
+                                      task: Task(
+                                        id: null,
+                                        title: _taskNameController.text,
+                                        note: _taskDescriptionController.text,
+                                        isCompleted: 0,
+                                        date: DateFormat.yMd().format(date),
+                                      ),
+                                    );
+                                  },
                                   child: SvgPicture.asset(
                                     "assets/send.svg",
                                     color: kWhiteColor,

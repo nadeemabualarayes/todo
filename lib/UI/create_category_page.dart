@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_iconpicker/flutter_iconpicker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
+import 'package:todotask/controllers/category_controller.dart';
+import 'package:todotask/models/category.dart';
 import '../utils/colors.dart';
 
 class AddCategoryScreen extends StatefulWidget {
@@ -44,6 +47,7 @@ class _addCategoryWidgetState extends State<addCategoryWidget> {
   List<Color> colorList = [bluishClr, pinkClr, orangeClr];
   int _selectedColor = 0;
   Icon _icon;
+  final CategoryController _categoryController = Get.put(CategoryController());
 
   @override
   Widget build(BuildContext context) {
@@ -161,6 +165,7 @@ class _addCategoryWidgetState extends State<addCategoryWidget> {
                           onTap: () {
                             setState(() {
                               _selectedColor = index;
+                              print(colorList[_selectedColor].toString());
                             });
                           },
                           borderRadius: BorderRadius.circular(50),
@@ -190,14 +195,7 @@ class _addCategoryWidgetState extends State<addCategoryWidget> {
                 GestureDetector(
                   onTap: () async {
                     Navigator.pop(context);
-                    Fluttertoast.showToast(
-                        msg: "done",
-                        toastLength: Toast.LENGTH_LONG,
-                        gravity: ToastGravity.BOTTOM,
-                        timeInSecForIosWeb: 1,
-                        backgroundColor: kWhiteColor,
-                        textColor: kPurpleColor,
-                        fontSize: 16.0);
+                    _categoryController.getCategories();
                   },
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15.0),
@@ -222,6 +220,16 @@ class _addCategoryWidgetState extends State<addCategoryWidget> {
                 GestureDetector(
                   onTap: () async {
                     //TODO: ADD TO DATABASE -> COLOR AND NAME AND ICON
+
+                    _categoryController.addCategory(
+                      category: Category(
+                        id: null,
+                        name: name.text,
+                        icon: _icon,
+                        color: colorList[_selectedColor].toString(),
+                      ),
+                    );
+
                     Fluttertoast.showToast(
                         msg: "Added Successfully",
                         toastLength: Toast.LENGTH_LONG,
@@ -268,7 +276,7 @@ class _addCategoryWidgetState extends State<addCategoryWidget> {
 
     _icon = Icon(icon);
     setState(() {});
-
+    print(_icon.icon.toString());
     debugPrint('Picked Icon:  $icon');
   }
 }
