@@ -182,7 +182,7 @@ class _TaskInformationScreenState extends State<TaskInformationScreen> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        EditTodoSheet.show(context);
+                        EditTodoSheet.show(context); //todo pass text
                       },
                       child: SvgPicture.asset(
                         "assets/edit.svg",
@@ -312,7 +312,7 @@ class _TaskInformationScreenState extends State<TaskInformationScreen> {
                       child: Container(
                         height: 30,
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(
+                          borderRadius: const BorderRadius.all(
                             Radius.circular(6),
                           ),
                           color: Color(
@@ -329,7 +329,7 @@ class _TaskInformationScreenState extends State<TaskInformationScreen> {
                                 _categoryController
                                     .categoryList[newTask.categoryId - 1].name,
                                 textAlign: TextAlign.left,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: kWhiteColor,
                                   fontSize: 12,
                                   fontWeight: FontWeight.normal,
