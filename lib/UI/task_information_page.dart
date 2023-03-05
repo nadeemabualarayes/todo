@@ -2,22 +2,63 @@ import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:todotask/UI/Sheets/category_sheet.dart';
 import 'package:todotask/UI/Sheets/delete_todo_sheet.dart';
 import 'package:todotask/UI/home_screen.dart';
+import 'package:todotask/controllers/category_controller.dart';
+import 'package:todotask/controllers/task_controller.dart';
+import 'package:todotask/models/task.dart';
 import '../utils/colors.dart';
 import 'Sheets/edit_todo_sheet.dart';
 
 class TaskInformationScreen extends StatefulWidget {
-  const TaskInformationScreen({Key key}) : super(key: key);
+  final Task task;
+
+  const TaskInformationScreen({Key key, this.task}) : super(key: key);
   static const String id = '/TaskInformationScreen';
   @override
   State<TaskInformationScreen> createState() => _TaskInformationScreenState();
 }
 
 class _TaskInformationScreenState extends State<TaskInformationScreen> {
+  final TaskController _taskController = Get.put(TaskController());
+  final CategoryController _categoryController = Get.put(CategoryController());
+  IconData iconData;
+  bool _isChecked = false;
+  Task newTask;
+  @override
+  void initState() {
+    newTask = widget.task;
+    Future.delayed(
+        const Duration(
+          seconds: 0,
+        ), () async {
+      await _taskController.getTasks("");
+      await _categoryController.getCategories();
+      setState(() {
+        _taskController.getTasks("");
+        _categoryController.getCategories();
+      });
+    });
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    _isChecked = (newTask.isCompleted == 0) ? false : true;
+    String storedIconDataString =
+        _categoryController.categoryList[newTask.categoryId - 1].icon;
+    List<String> parts = storedIconDataString.split(',');
+    int iconName = int.parse(parts[0]);
+    String iconFontFamily = parts[1];
+    iconData = IconData(
+      iconName,
+      fontFamily: iconFontFamily,
+      fontPackage: null,
+      matchTextDirection: false,
+    );
     return Scaffold(
       backgroundColor: kBackgroundColor,
       body: SafeArea(
@@ -70,7 +111,9 @@ class _TaskInformationScreenState extends State<TaskInformationScreen> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: InkWell(
-                      onTap: () {
+                      onTap: () async {
+                        await _taskController.markTaskAsCompleted(
+                            task: newTask, status: (_isChecked) ? 1 : 0);
                         //TODO : EDIT STATUS ON DATABASE
                       },
                       child: Container(
@@ -87,11 +130,13 @@ class _TaskInformationScreenState extends State<TaskInformationScreen> {
                           padding: const EdgeInsets.all(8.0),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
-                            children: const <Widget>[
+                            children: <Widget>[
                               Text(
-                                'Mark as Complete',
+                                (!_isChecked)
+                                    ? 'Mark as Complete'
+                                    : 'Mark as  Not Complete', //todo
                                 textAlign: TextAlign.left,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: kWhiteColor,
                                   fontSize: 14,
                                   fontWeight: FontWeight.normal,
@@ -114,20 +159,20 @@ class _TaskInformationScreenState extends State<TaskInformationScreen> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: const [
+                      children: [
                         Text(
-                          'Do Math Homework',
+                          newTask.title,
                           textAlign: TextAlign.start,
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: kWhiteColor,
                             fontSize: 20,
                             fontWeight: FontWeight.normal,
                           ),
                         ),
                         Text(
-                          'Do chapter 2 to 5 for next week',
+                          newTask.note,
                           textAlign: TextAlign.start,
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: kWhiteColor,
                             fontSize: 18,
                             fontWeight: FontWeight.normal,
@@ -165,9 +210,9 @@ class _TaskInformationScreenState extends State<TaskInformationScreen> {
                           height: 30,
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: const Text("Task Time :",
+                      const Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Text("Task Time :",
                             style: TextStyle(
                               color: kWhiteColor,
                               fontSize: 15,
@@ -216,11 +261,11 @@ class _TaskInformationScreenState extends State<TaskInformationScreen> {
                           padding: const EdgeInsets.all(8.0),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
-                            children: const <Widget>[
+                            children: <Widget>[
                               Text(
-                                'Today 16:45 pm',
+                                newTask.date, // todo:
                                 textAlign: TextAlign.left,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: kWhiteColor,
                                   fontSize: 12,
                                   fontWeight: FontWeight.normal,
@@ -266,19 +311,23 @@ class _TaskInformationScreenState extends State<TaskInformationScreen> {
                       },
                       child: Container(
                         height: 30,
-                        decoration: const BoxDecoration(
+                        decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(
                             Radius.circular(6),
                           ),
-                          color: kGrayColor,
+                          color: Color(
+                            int.parse(_categoryController
+                                .categoryList[newTask.categoryId - 1].color),
+                          ),
                         ),
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
-                            children: const <Widget>[
+                            children: <Widget>[
                               Text(
-                                'University',
+                                _categoryController
+                                    .categoryList[newTask.categoryId - 1].name,
                                 textAlign: TextAlign.left,
                                 style: TextStyle(
                                   color: kWhiteColor,
@@ -291,7 +340,7 @@ class _TaskInformationScreenState extends State<TaskInformationScreen> {
                         ),
                       ),
                     ),
-                  )
+                  ),
                 ],
               ),
               InkWell(

@@ -62,11 +62,32 @@ class DBHelper {
     return await mydb.delete(_tableName, where: 'id = ?', whereArgs: [id]);
   }
 
-  Future<int> update(int id, int status) async {
+  Future<int> updateTaskStatus(int id, int status) async {
     Database mydb = await db;
     print('Update ====');
     return await mydb.rawUpdate(
         'UPDATE $_tableName SET isCompleted = ? WHERE id = ?', [status, id]);
+  }
+
+  Future updateTaskInformation(
+      int id,
+      String title,
+      String note,
+      String date,
+      int status,
+      int categoryId,
+      String categoryName,
+      String categoryIcon,
+      String categoryColor) async {
+    Database mydb = await db;
+    print('Update ====');
+    //return
+    await mydb.rawUpdate(
+        'UPDATE $_tableName SET title = ? ,note = ? , date = ?, isCompleted = ? , categoryId = ?  WHERE id = ?',
+        [title, note, date, status, categoryId, id]);
+    await mydb.rawUpdate(
+        'UPDATE TABLE $_tableCategory SET name = ? ,icon = ?,color = ? WHERE id = ?',
+        [categoryName, categoryIcon, categoryColor, id]);
   }
 
   Future<List<Map<String, Object>>> query(String tableName) async {

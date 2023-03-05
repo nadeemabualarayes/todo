@@ -24,9 +24,9 @@ class _HomeScreenState extends State<HomeScreen> {
         const Duration(
           seconds: 0,
         ), () async {
-      await _taskController.getTasks();
+      await _taskController.getTasks("");
       setState(() {
-        _taskController.getTasks();
+        _taskController.getTasks("");
       });
     });
 
@@ -154,10 +154,10 @@ class _NewHomePageState extends State<NewHomePage> {
         const Duration(
           seconds: 0,
         ), () async {
-      await _taskController.getTasks();
+      await _taskController.getTasks("");
       await _categoryController.getCategories();
       setState(() {
-        _taskController.getTasks();
+        _taskController.getTasks("");
         _categoryController.getCategories();
       });
     });
@@ -183,6 +183,10 @@ class _NewHomePageState extends State<NewHomePage> {
                 child: Center(
                   child: TextField(
                     controller: search,
+                    onChanged: (text) {
+                      _taskController.setSearchText(text);
+                      _taskController.getFilterdTasks();
+                    },
                     style: const TextStyle(color: kTextColor),
                     decoration: InputDecoration(
                       prefixIcon: const Icon(
@@ -238,14 +242,17 @@ class _NewHomePageState extends State<NewHomePage> {
                         // TODO:
                         print(dropdownValue);
                         if (dropdownValue == "All") {
-                          _taskController.getTasks();
-                          _taskController.refresh();
+                          _taskController.getTasks("All");
+                          _taskController.update();
+                          print(_taskController.taskList.length);
                         } else if (dropdownValue == "Today") {
-                          _taskController.getTodayTasks();
-                          _taskController.refresh();
+                          _taskController.getTasks("Today");
+                          _taskController.update();
+                          print(_taskController.taskTodayList.length);
                         } else if (dropdownValue == "Complete") {
-                          _taskController.getCompleteTasks();
-                          _taskController.refresh();
+                          _taskController.getTasks("Complete");
+                          _taskController.update();
+                          print(_taskController.taskCompleteList.length);
                         }
                       });
                     },
@@ -295,7 +302,8 @@ class _NewHomePageState extends State<NewHomePage> {
                     child: InkWell(
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const TaskInformationScreen(),
+                          builder: (context) => TaskInformationScreen(
+                              task: _taskController.taskList[index]),
                         ));
                       },
                       child: Container(

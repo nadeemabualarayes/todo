@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
+import 'package:todotask/controllers/task_controller.dart';
 import 'package:todotask/utils/colors.dart';
 
 class CalenderPage extends StatefulWidget {
@@ -12,10 +14,21 @@ class CalenderPage extends StatefulWidget {
 }
 
 class _CalenderPageState extends State<CalenderPage> {
+  final TaskController _taskController = Get.put(TaskController());
+  bool event;
   @override
-  initState() {
+  void initState() {
+    Future.delayed(
+        const Duration(
+          seconds: 0,
+        ), () async {
+      await _taskController.getTasks("");
+      setState(() {
+        _taskController.getTasks("");
+      });
+    });
+
     super.initState();
-    goToCalender();
   }
 
   @override
@@ -67,14 +80,12 @@ class _CalenderPageState extends State<CalenderPage> {
               view: CalendarView.month,
               showNavigationArrow: true,
               showDatePickerButton: true,
-              // dataSource: EventCalendarDataSource(
-              //     Provider.of<DataSync>(context, listen: false)
-              //         .adminListOfCalendarDataGetter),
+              dataSource: EventCalendarDataSource(_taskController.taskList),
               monthViewSettings: MonthViewSettings(
                   showTrailingAndLeadingDates: false,
                   agendaStyle: AgendaStyle(
                       appointmentTextStyle: TextStyle(
-                          color: kPurpleColor,
+                          color: kWhiteColor,
                           fontSize: MediaQuery.of(context).textScaleFactor * 15,
                           fontWeight: FontWeight.bold),
                       dayTextStyle: TextStyle(
@@ -107,6 +118,4 @@ class _CalenderPageState extends State<CalenderPage> {
           });
         })));
   }
-
-  void goToCalender() async {}
 }
