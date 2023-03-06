@@ -8,9 +8,11 @@ import 'package:todotask/UI/Sheets/delete_todo_sheet.dart';
 import 'package:todotask/UI/home_screen.dart';
 import 'package:todotask/controllers/category_controller.dart';
 import 'package:todotask/controllers/task_controller.dart';
+import 'package:todotask/models/category.dart';
 import 'package:todotask/models/task.dart';
 import '../utils/colors.dart';
 import 'Sheets/edit_todo_sheet.dart';
+import 'package:intl/intl.dart';
 
 class TaskInformationScreen extends StatefulWidget {
   final Task task;
@@ -26,10 +28,14 @@ class _TaskInformationScreenState extends State<TaskInformationScreen> {
   final CategoryController _categoryController = Get.put(CategoryController());
   IconData iconData;
   bool _isChecked = false;
+
   Task newTask;
+  String categoryName, categoryColor, categoryIcon;
+  var event;
   @override
   void initState() {
     newTask = widget.task;
+    _isChecked = (newTask.isCompleted == 0) ? false : true;
     Future.delayed(
         const Duration(
           seconds: 0,
@@ -47,7 +53,6 @@ class _TaskInformationScreenState extends State<TaskInformationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    _isChecked = (newTask.isCompleted == 0) ? false : true;
     String storedIconDataString =
         _categoryController.categoryList[newTask.categoryId - 1].icon;
     List<String> parts = storedIconDataString.split(',');
@@ -112,13 +117,24 @@ class _TaskInformationScreenState extends State<TaskInformationScreen> {
                     padding: const EdgeInsets.all(8.0),
                     child: InkWell(
                       onTap: () async {
-                        await _taskController.markTaskAsCompleted(
-                            task: newTask, status: (_isChecked) ? 1 : 0);
-                        //TODO : EDIT STATUS ON DATABASE
+                        // if (newTask.isCompleted == 0) {
+                        //   setState(() {
+                        //     _isChecked = false;
+                        //   });
+                        // }
+                        // if (newTask.isCompleted == 1) {
+                        //   setState(() {
+                        //     _isChecked = true;
+                        //   });
+                        // }
+                        setState(() {
+                          _isChecked = !_isChecked;
+                        });
+                        print(_isChecked);
                       },
                       child: Container(
                         height: 30,
-                        width: 160,
+                        width: 180,
                         alignment: Alignment.center,
                         decoration: const BoxDecoration(
                           borderRadius: BorderRadius.all(
@@ -134,7 +150,7 @@ class _TaskInformationScreenState extends State<TaskInformationScreen> {
                               Text(
                                 (!_isChecked)
                                     ? 'Mark as Complete'
-                                    : 'Mark as  Not Complete', //todo
+                                    : 'Mark as Not Complete', //todo
                                 textAlign: TextAlign.left,
                                 style: const TextStyle(
                                   color: kWhiteColor,
@@ -181,8 +197,16 @@ class _TaskInformationScreenState extends State<TaskInformationScreen> {
                       ],
                     ),
                     GestureDetector(
-                      onTap: () {
-                        EditTodoSheet.show(context); //todo pass text
+                      onTap: () async {
+                        var event = await EditTodoSheet.show(context,
+                            newTask.title, newTask.note); //todo pass text
+                        if (event != null) {
+                          setState(() {
+                            newTask.title = event[0];
+                            newTask.note = event[1];
+                          });
+                        }
+                        print(event);
                       },
                       child: SvgPicture.asset(
                         "assets/edit.svg",
@@ -242,15 +266,15 @@ class _TaskInformationScreenState extends State<TaskInformationScreen> {
                                 fontSize: 16,
                               ),
                             ),
-                            showTitleActions: true, onChanged: (date) {
-                          print(
-                              'change $date in time zone ${date.timeZoneOffset.inHours}');
-                        }, onConfirm: (date) {
-                          print('confirm $date');
+                            showTitleActions: true,
+                            onChanged: (date) {}, onConfirm: (date) {
+                          setState(() {
+                            newTask.date = DateFormat.yMd().format(date);
+                          });
                         }, currentTime: DateTime.now());
                       },
                       child: Container(
-                        height: 30,
+                        height: 40,
                         decoration: const BoxDecoration(
                           borderRadius: BorderRadius.all(
                             Radius.circular(6),
@@ -263,7 +287,7 @@ class _TaskInformationScreenState extends State<TaskInformationScreen> {
                             mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
                               Text(
-                                newTask.date, // todo:
+                                newTask.date,
                                 textAlign: TextAlign.left,
                                 style: const TextStyle(
                                   color: kWhiteColor,
@@ -306,28 +330,61 @@ class _TaskInformationScreenState extends State<TaskInformationScreen> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: InkWell(
-                      onTap: () {
-                        CategorySheet.show(context);
+                      onTap: () async {
+                        event = await CategorySheet.show(
+                          context,
+                        );
+                        if (event != null) {
+                          print(event);
+                          newTask.categoryId = event[0];
+                          categoryName = event[1];
+                          categoryColor = event[2];
+                          categoryIcon = event[3];
+
+                          String storedIconDataString = categoryIcon;
+                          List<String> parts = storedIconDataString.split(',');
+                          int iconName = int.parse(parts[0]);
+                          String iconFontFamily = parts[1];
+                          iconData = IconData(
+                            iconName,
+                            fontFamily: iconFontFamily,
+                            fontPackage: null,
+                            matchTextDirection: false,
+                          );
+                          setState(() {});
+                        }
                       },
                       child: Container(
-                        height: 30,
+                        height: 40,
                         decoration: BoxDecoration(
                           borderRadius: const BorderRadius.all(
                             Radius.circular(6),
                           ),
-                          color: Color(
-                            int.parse(_categoryController
-                                .categoryList[newTask.categoryId - 1].color),
-                          ),
+                          color: (categoryColor != null)
+                              ? Color(
+                                  int.parse(categoryColor),
+                                )
+                              : Color(
+                                  int.parse(_categoryController
+                                      .categoryList[newTask.categoryId - 1]
+                                      .color),
+                                ),
                         ),
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
+                              Icon(iconData),
+                              const SizedBox(width: 5),
                               Text(
-                                _categoryController
-                                    .categoryList[newTask.categoryId - 1].name,
+                                (categoryName != null)
+                                    ? categoryName
+                                    : _categoryController
+                                        .categoryList[newTask.categoryId - 1]
+                                        .name,
                                 textAlign: TextAlign.left,
                                 style: const TextStyle(
                                   color: kWhiteColor,
@@ -345,8 +402,7 @@ class _TaskInformationScreenState extends State<TaskInformationScreen> {
               ),
               InkWell(
                 onTap: () {
-                  // TODO: Delete task form database
-                  DeleteTodoSheet.show(context);
+                  DeleteTodoSheet.show(context, newTask);
                 },
                 child: Wrap(
                   crossAxisAlignment: WrapCrossAlignment.center,
@@ -376,14 +432,28 @@ class _TaskInformationScreenState extends State<TaskInformationScreen> {
                 alignment: Alignment.bottomCenter,
                 child: GestureDetector(
                   onTap: () async {
-                    Navigator.of(context).push(
+                    await _taskController.updateTaskInformation(
+                        task: Task(
+                            id: newTask.id,
+                            title: newTask.title,
+                            note: newTask.note,
+                            isCompleted: (_isChecked) ? 1 : 0,
+                            date: newTask.date,
+                            categoryId: newTask.categoryId),
+                        category: Category(
+                            id: newTask.categoryId,
+                            color: categoryColor,
+                            name: categoryName,
+                            icon: categoryIcon));
+
+                    await Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (_) => const HomeScreen(),
                       ),
                     );
 
                     Fluttertoast.showToast(
-                        msg: "you cant",
+                        msg: "Task Information Updated",
                         toastLength: Toast.LENGTH_LONG,
                         gravity: ToastGravity.BOTTOM,
                         timeInSecForIosWeb: 1,

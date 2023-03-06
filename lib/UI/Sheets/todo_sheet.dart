@@ -191,11 +191,8 @@ class _TodoSheetState extends State<TodoSheet> {
                                           showTitleActions: true,
                                           onChanged: (datee) {
                                         date = datee;
-                                        print(
-                                            'change $date in time zone ${date.timeZoneOffset.inHours}');
                                       }, onConfirm: (datee) {
                                         date = datee;
-                                        print('confirm $date');
                                       }, currentTime: DateTime.now());
                                     },
                                     child: SvgPicture.asset(
@@ -212,9 +209,10 @@ class _TodoSheetState extends State<TodoSheet> {
                                   aspectRatio: 0.8,
                                   child: GestureDetector(
                                     onTap: () async {
-                                      categoryId = await CategorySheet.show(
+                                      var event = await CategorySheet.show(
                                         context,
                                       );
+                                      categoryId = event[0];
                                       if (categoryId == null) {
                                         Fluttertoast.showToast(
                                             msg: "Please Select Category",

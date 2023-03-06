@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:todotask/db/db_helper.dart';
+import 'package:todotask/models/category.dart';
 import 'package:todotask/models/task.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
@@ -60,6 +61,12 @@ class TaskController extends GetxController {
 
   Future deleteask({Task task}) async {
     await dbHelper.delete(task.id);
+    getTasks("");
+    refresh();
+  }
+
+  Future updateTaskInformation({Task task, Category category}) async {
+    await dbHelper.updateTaskInformation(task, category);
     getTasks("");
     refresh();
   }

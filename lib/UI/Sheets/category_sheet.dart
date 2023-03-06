@@ -37,6 +37,7 @@ class _CategorySheetState extends State<CategorySheet> {
   final CategoryController _categoryController = Get.put(CategoryController());
   IconData iconData;
   int categoryId;
+  String categoryName, categoryColor, categoryIcon;
   @override
   void initState() {
     _categoryController.getCategories();
@@ -121,6 +122,21 @@ class _CategorySheetState extends State<CategorySheet> {
                     return InkWell(
                       onTap: () {
                         categoryId = _categoryController.categoryList[index].id;
+                        categoryName =
+                            _categoryController.categoryList[index].name;
+                        categoryColor =
+                            _categoryController.categoryList[index].color;
+                        categoryIcon =
+                            _categoryController.categoryList[index].icon;
+                        Fluttertoast.showToast(
+                            msg:
+                                "${_categoryController.categoryList[index].name} Category Selected",
+                            toastLength: Toast.LENGTH_LONG,
+                            gravity: ToastGravity.BOTTOM,
+                            timeInSecForIosWeb: 1,
+                            backgroundColor: kWhiteColor,
+                            textColor: kPurpleColor,
+                            fontSize: 16.0);
                       },
                       child: Column(
                         children: [
@@ -186,7 +202,12 @@ class _CategorySheetState extends State<CategorySheet> {
                             textColor: kPurpleColor,
                             fontSize: 16.0);
                       } else {
-                        Navigator.pop(context, categoryId);
+                        Navigator.pop(context, [
+                          categoryId,
+                          categoryName,
+                          categoryColor,
+                          categoryIcon
+                        ]);
                         Fluttertoast.showToast(
                             msg: "Category Selected",
                             toastLength: Toast.LENGTH_LONG,

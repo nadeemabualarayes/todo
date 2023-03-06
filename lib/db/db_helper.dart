@@ -69,25 +69,27 @@ class DBHelper {
         'UPDATE $_tableName SET isCompleted = ? WHERE id = ?', [status, id]);
   }
 
-  Future updateTaskInformation(
-      int id,
-      String title,
-      String note,
-      String date,
-      int status,
-      int categoryId,
-      String categoryName,
-      String categoryIcon,
-      String categoryColor) async {
+  Future updateTaskInformation(Task task, Category category) async {
     Database mydb = await db;
     print('Update ====');
     //return
     await mydb.rawUpdate(
         'UPDATE $_tableName SET title = ? ,note = ? , date = ?, isCompleted = ? , categoryId = ?  WHERE id = ?',
-        [title, note, date, status, categoryId, id]);
-    await mydb.rawUpdate(
-        'UPDATE TABLE $_tableCategory SET name = ? ,icon = ?,color = ? WHERE id = ?',
-        [categoryName, categoryIcon, categoryColor, id]);
+        [
+          task.title,
+          task.note,
+          task.date,
+          task.isCompleted,
+          task.categoryId,
+          task.id
+        ]);
+    // if (category.name != null ||
+    //     category.color != null ||
+    //     category.icon != null) {
+    //   await mydb.rawUpdate(
+    //       'UPDATE TABLE $_tableCategory SET name = ? ,icon = ?,color = ? WHERE id = ?',
+    //       [category.name, "${category.icon}", category.color, category.id]);
+    // } else {}
   }
 
   Future<List<Map<String, Object>>> query(String tableName) async {

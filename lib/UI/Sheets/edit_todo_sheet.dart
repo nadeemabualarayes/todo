@@ -7,9 +7,7 @@ import 'package:todotask/utils/colors.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
 class EditTodoSheet extends StatefulWidget {
-  static Future<dynamic> show(
-    BuildContext context,
-  ) {
+  static Future<dynamic> show(BuildContext context, String title, String note) {
     return showModalBottomSheet(
         context: context,
         isScrollControlled: true,
@@ -20,11 +18,19 @@ class EditTodoSheet extends StatefulWidget {
         ),
         clipBehavior: Clip.hardEdge,
         builder: (context) {
-          return const EditTodoSheet();
+          return EditTodoSheet(
+            title: title,
+            note: note,
+          );
         });
   }
 
+  final String title;
+  final String note;
+
   const EditTodoSheet({
+    this.title,
+    this.note,
     Key key,
   }) : super(key: key);
 
@@ -36,6 +42,14 @@ class _EditTodoSheetState extends State<EditTodoSheet> {
   final TextEditingController _taskNameController = TextEditingController();
   final TextEditingController _taskDescriptionController =
       TextEditingController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    _taskNameController.text = widget.title;
+    _taskDescriptionController.text = widget.note;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -120,7 +134,10 @@ class _EditTodoSheetState extends State<EditTodoSheet> {
                 children: [
                   GestureDetector(
                     onTap: () async {
-                      Navigator.pop(context);
+                      Navigator.pop(context, [
+                        _taskNameController.text,
+                        _taskDescriptionController.text
+                      ]);
                     },
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 15.0),
@@ -144,6 +161,10 @@ class _EditTodoSheetState extends State<EditTodoSheet> {
                   ),
                   GestureDetector(
                     onTap: () async {
+                      Navigator.pop(context, [
+                        _taskNameController.text,
+                        _taskDescriptionController.text
+                      ]);
                       Fluttertoast.showToast(
                           msg: "done",
                           toastLength: Toast.LENGTH_LONG,

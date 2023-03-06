@@ -2,13 +2,18 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:todotask/UI/Sheets/category_sheet.dart';
+import 'package:todotask/UI/home_screen.dart';
+import 'package:todotask/controllers/task_controller.dart';
+import 'package:todotask/models/task.dart';
 import 'package:todotask/utils/colors.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
 class DeleteTodoSheet extends StatefulWidget {
   static Future<dynamic> show(
     BuildContext context,
+    Task task,
   ) {
     return showModalBottomSheet(
         context: context,
@@ -20,11 +25,15 @@ class DeleteTodoSheet extends StatefulWidget {
         ),
         clipBehavior: Clip.hardEdge,
         builder: (context) {
-          return const DeleteTodoSheet();
+          return DeleteTodoSheet(
+            task: task,
+          );
         });
   }
 
-  const DeleteTodoSheet({
+  Task task;
+  DeleteTodoSheet({
+    this.task,
     Key key,
   }) : super(key: key);
 
@@ -33,6 +42,8 @@ class DeleteTodoSheet extends StatefulWidget {
 }
 
 class _DeleteTodoSheetState extends State<DeleteTodoSheet> {
+  final TaskController _taskController = Get.put(TaskController());
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -66,13 +77,30 @@ class _DeleteTodoSheetState extends State<DeleteTodoSheet> {
                 Padding(
                   padding: const EdgeInsets.all(18.0),
                   child: Container(
-                    width: 70,
-                    alignment: Alignment.center,
-                    child: const Text(
-                      "Are You sure you want to delete this task? \nTask title : Do math homework",
-                      style: TextStyle(color: kWhiteColor, fontSize: 18),
-                    ),
-                  ),
+                      width: 70,
+                      alignment: Alignment.center,
+                      child: RichText(
+                        textAlign: TextAlign.start,
+                        text: TextSpan(
+                          text: "Are You sure you want to delete this task ?\n",
+                          style: const TextStyle(
+                            height: 1.8,
+                            fontSize: 16,
+                            fontWeight: FontWeight.normal,
+                            color: kWhiteColor,
+                          ),
+                          children: [
+                            TextSpan(
+                              text: "Task Title : ${widget.task.title}",
+                              style: const TextStyle(
+                                fontSize: 14.3,
+                                fontWeight: FontWeight.bold,
+                                color: kWhiteColor,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -104,8 +132,16 @@ class _DeleteTodoSheetState extends State<DeleteTodoSheet> {
                     GestureDetector(
                       onTap: () async {
                         //TODO: Delete Task form DATABASE
+                        await _taskController.deleteask(task: widget.task);
+
+                        await Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => const HomeScreen(),
+                          ),
+                        );
+
                         Fluttertoast.showToast(
-                            msg: "done",
+                            msg: "Task deleted",
                             toastLength: Toast.LENGTH_LONG,
                             gravity: ToastGravity.BOTTOM,
                             timeInSecForIosWeb: 1,
