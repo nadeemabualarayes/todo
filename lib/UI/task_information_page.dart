@@ -433,18 +433,14 @@ class _TaskInformationScreenState extends State<TaskInformationScreen> {
                 child: GestureDetector(
                   onTap: () async {
                     await _taskController.updateTaskInformation(
-                        task: Task(
-                            id: newTask.id,
-                            title: newTask.title,
-                            note: newTask.note,
-                            isCompleted: (_isChecked) ? 1 : 0,
-                            date: newTask.date,
-                            categoryId: newTask.categoryId),
-                        category: Category(
-                            id: newTask.categoryId,
-                            color: categoryColor,
-                            name: categoryName,
-                            icon: categoryIcon));
+                      task: Task(
+                          id: newTask.id,
+                          title: newTask.title,
+                          note: newTask.note,
+                          isCompleted: (_isChecked) ? 1 : 0,
+                          date: newTask.date,
+                          categoryId: newTask.categoryId),
+                    );
 
                     await Navigator.of(context).push(
                       MaterialPageRoute(

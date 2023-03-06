@@ -65,8 +65,10 @@ class TaskController extends GetxController {
     refresh();
   }
 
-  Future updateTaskInformation({Task task, Category category}) async {
-    await dbHelper.updateTaskInformation(task, category);
+  Future updateTaskInformation({
+    Task task,
+  }) async {
+    await dbHelper.updateTaskInformation(task);
     getTasks("");
     refresh();
   }
