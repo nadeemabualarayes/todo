@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:todotask/UI/Sheets/todo_sheet.dart';
-import 'package:todotask/UI/task_information_page.dart';
+import 'package:todotask/UI/Pages/task_information_page.dart';
 import 'package:todotask/controllers/category_controller.dart';
 import 'package:todotask/controllers/task_controller.dart';
-import '../utils/colors.dart';
+import 'package:todotask/services/localNotificationService.dart';
+import '../../utils/colors.dart';
 import 'calender_page.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -17,9 +18,13 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final TaskController _taskController = Get.put(TaskController());
+  LocalNotificationService localNotificationService =
+      LocalNotificationService();
   bool event;
   @override
   void initState() {
+    localNotificationService.sendSecheduleNotification(
+        "Write Your Task", "Dear User Don't Forget Write Tasks");
     Future.delayed(
         const Duration(
           seconds: 0,

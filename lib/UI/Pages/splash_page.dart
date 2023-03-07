@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:todotask/UI/biometric_page.dart';
+import 'package:todotask/UI/Pages/biometric_page.dart';
 import 'package:todotask/utils/colors.dart';
 
 class SplashPage extends StatefulWidget {

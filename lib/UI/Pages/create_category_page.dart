@@ -4,7 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:todotask/controllers/category_controller.dart';
 import 'package:todotask/models/category.dart';
-import '../utils/colors.dart';
+import 'package:todotask/utils/colors.dart';
 
 class AddCategoryScreen extends StatefulWidget {
   const AddCategoryScreen({Key key}) : super(key: key);

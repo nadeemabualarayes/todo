@@ -6,12 +6,12 @@ import 'package:get/get.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:todotask/UI/Sheets/category_sheet.dart';
 import 'package:todotask/UI/Sheets/delete_todo_sheet.dart';
-import 'package:todotask/UI/home_screen.dart';
+import 'package:todotask/UI/Pages/home_screen.dart';
 import 'package:todotask/controllers/category_controller.dart';
 import 'package:todotask/controllers/task_controller.dart';
 import 'package:todotask/models/task.dart';
-import '../utils/colors.dart';
-import 'Sheets/edit_todo_sheet.dart';
+import '../../utils/colors.dart';
+import '../Sheets/edit_todo_sheet.dart';
 import 'package:intl/intl.dart';
 
 class TaskInformationScreen extends StatefulWidget {
