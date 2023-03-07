@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:todotask/UI/create_category_page.dart';
+import 'package:todotask/UI/Pages/create_category_page.dart';
 import 'package:todotask/controllers/category_controller.dart';
 import 'package:todotask/utils/colors.dart';
 

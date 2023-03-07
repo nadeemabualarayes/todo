@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:todotask/db/db_helper.dart';
-import 'package:todotask/models/category.dart';
 import 'package:todotask/models/task.dart';
 import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';

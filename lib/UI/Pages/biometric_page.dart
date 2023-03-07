@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:todotask/auth/biometric_helper.dart';
 import 'package:todotask/utils/colors.dart';
 
 import 'home_screen.dart';
@@ -13,6 +14,19 @@ class BiometricPage extends StatefulWidget {
 }
 
 class _BiometricPageState extends State<BiometricPage> {
+  bool showBiometric = false;
+  bool isAuthenticated = false;
+  @override
+  void initState() {
+    isBiometricsAvailable();
+    super.initState();
+  }
+
+  isBiometricsAvailable() async {
+    showBiometric = await BiometricHelper().hasEnrolledBiometrics();
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,20 +56,33 @@ class _BiometricPageState extends State<BiometricPage> {
                 alignment: Alignment.bottomCenter,
                 child: GestureDetector(
                   onTap: () async {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) => const HomeScreen(),
-                      ),
-                    );
+                    isAuthenticated = await BiometricHelper().authenticate();
+                    setState(() {});
 
-                    Fluttertoast.showToast(
-                        msg: "you cant",
-                        toastLength: Toast.LENGTH_LONG,
-                        gravity: ToastGravity.BOTTOM,
-                        timeInSecForIosWeb: 1,
-                        backgroundColor: kWhiteColor,
-                        textColor: kPurpleColor,
-                        fontSize: 16.0);
+                    if (isAuthenticated) {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => const HomeScreen(),
+                        ),
+                      );
+                      Fluttertoast.showToast(
+                          msg: "Welcome ... ",
+                          toastLength: Toast.LENGTH_LONG,
+                          gravity: ToastGravity.BOTTOM,
+                          timeInSecForIosWeb: 1,
+                          backgroundColor: kWhiteColor,
+                          textColor: kPurpleColor,
+                          fontSize: 16.0);
+                    } else {
+                      Fluttertoast.showToast(
+                          msg: "Opps ...",
+                          toastLength: Toast.LENGTH_LONG,
+                          gravity: ToastGravity.BOTTOM,
+                          timeInSecForIosWeb: 1,
+                          backgroundColor: kWhiteColor,
+                          textColor: kPurpleColor,
+                          fontSize: 16.0);
+                    }
                   },
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),

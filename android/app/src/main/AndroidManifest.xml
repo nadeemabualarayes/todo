@@ -1,6 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ps.vatrin.todotask">
-   <application
+    <uses-permission android:name="android.permission.USE_FINGERPRINT"/>
+
+    <application
         android:label="todotask"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
