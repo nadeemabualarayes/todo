@@ -3,12 +3,12 @@ import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:todotask/UI/Sheets/category_sheet.dart';
 import 'package:todotask/UI/Sheets/delete_todo_sheet.dart';
 import 'package:todotask/UI/home_screen.dart';
 import 'package:todotask/controllers/category_controller.dart';
 import 'package:todotask/controllers/task_controller.dart';
-import 'package:todotask/models/category.dart';
 import 'package:todotask/models/task.dart';
 import '../utils/colors.dart';
 import 'Sheets/edit_todo_sheet.dart';
@@ -117,20 +117,9 @@ class _TaskInformationScreenState extends State<TaskInformationScreen> {
                     padding: const EdgeInsets.all(8.0),
                     child: InkWell(
                       onTap: () async {
-                        // if (newTask.isCompleted == 0) {
-                        //   setState(() {
-                        //     _isChecked = false;
-                        //   });
-                        // }
-                        // if (newTask.isCompleted == 1) {
-                        //   setState(() {
-                        //     _isChecked = true;
-                        //   });
-                        // }
                         setState(() {
                           _isChecked = !_isChecked;
                         });
-                        print(_isChecked);
                       },
                       child: Container(
                         height: 30,
@@ -150,7 +139,7 @@ class _TaskInformationScreenState extends State<TaskInformationScreen> {
                               Text(
                                 (!_isChecked)
                                     ? 'Mark as Complete'
-                                    : 'Mark as Not Complete', //todo
+                                    : 'Mark as Not Complete',
                                 textAlign: TextAlign.left,
                                 style: const TextStyle(
                                   color: kWhiteColor,
@@ -198,15 +187,14 @@ class _TaskInformationScreenState extends State<TaskInformationScreen> {
                     ),
                     GestureDetector(
                       onTap: () async {
-                        var event = await EditTodoSheet.show(context,
-                            newTask.title, newTask.note); //todo pass text
+                        var event = await EditTodoSheet.show(
+                            context, newTask.title, newTask.note);
                         if (event != null) {
                           setState(() {
                             newTask.title = event[0];
                             newTask.note = event[1];
                           });
                         }
-                        print(event);
                       },
                       child: SvgPicture.asset(
                         "assets/edit.svg",
@@ -399,6 +387,33 @@ class _TaskInformationScreenState extends State<TaskInformationScreen> {
                     ),
                   ),
                 ],
+              ),
+              InkWell(
+                onTap: () async {
+                  await Share.share(
+                      'Task Title : ${newTask.title}\nTask Note : ${newTask.note}\nTask Date : ${newTask.date}\n',
+                      subject: newTask.title);
+                },
+                child: Wrap(
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    SvgPicture.asset(
+                      "assets/share.svg",
+                      color: kPurpleColor,
+                      width: 30,
+                      height: 30,
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Text("Share Task",
+                          style: TextStyle(
+                            color: kPurpleColor,
+                            fontSize: 15,
+                            fontWeight: FontWeight.normal,
+                          )),
+                    ),
+                  ],
+                ),
               ),
               InkWell(
                 onTap: () {

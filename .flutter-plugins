@@ -1,7 +1,15 @@
 # This is a generated file; do not edit or check into version control.
 fluttertoast=/Users/quizplus/Development/flutter/.pub-cache/hosted/pub.dartlang.org/fluttertoast-8.1.2/
+path_provider=/Users/quizplus/Development/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider-2.0.13/
+path_provider_android=/Users/quizplus/Development/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider_android-2.0.23/
+path_provider_foundation=/Users/quizplus/Development/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider_foundation-2.1.2/
 path_provider_linux=/Users/quizplus/Development/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider_linux-2.1.9/
 path_provider_windows=/Users/quizplus/Development/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider_windows-2.1.4/
+share_plus=/Users/quizplus/Development/flutter/.pub-cache/hosted/pub.dartlang.org/share_plus-4.5.3/
+share_plus_linux=/Users/quizplus/Development/flutter/.pub-cache/hosted/pub.dartlang.org/share_plus_linux-3.0.1/
+share_plus_macos=/Users/quizplus/Development/flutter/.pub-cache/hosted/pub.dartlang.org/share_plus_macos-3.0.1/
+share_plus_web=/Users/quizplus/Development/flutter/.pub-cache/hosted/pub.dartlang.org/share_plus_web-3.1.0/
+share_plus_windows=/Users/quizplus/Development/flutter/.pub-cache/hosted/pub.dartlang.org/share_plus_windows-3.0.1/
 shared_preferences=/Users/quizplus/Development/flutter/.pub-cache/hosted/pub.dartlang.org/shared_preferences-2.0.18/
 shared_preferences_android=/Users/quizplus/Development/flutter/.pub-cache/hosted/pub.dartlang.org/shared_preferences_android-2.0.16/
 shared_preferences_foundation=/Users/quizplus/Development/flutter/.pub-cache/hosted/pub.dartlang.org/shared_preferences_foundation-2.1.4/
@@ -9,3 +17,10 @@ shared_preferences_linux=/Users/quizplus/Development/flutter/.pub-cache/hosted/p
 shared_preferences_web=/Users/quizplus/Development/flutter/.pub-cache/hosted/pub.dartlang.org/shared_preferences_web-2.0.5/
 shared_preferences_windows=/Users/quizplus/Development/flutter/.pub-cache/hosted/pub.dartlang.org/shared_preferences_windows-2.1.4/
 sqflite=/Users/quizplus/Development/flutter/.pub-cache/hosted/pub.dartlang.org/sqflite-2.0.3+1/
+url_launcher=/Users/quizplus/Development/flutter/.pub-cache/hosted/pub.dartlang.org/url_launcher-6.1.10/
+url_launcher_android=/Users/quizplus/Development/flutter/.pub-cache/hosted/pub.dartlang.org/url_launcher_android-6.0.24/
+url_launcher_ios=/Users/quizplus/Development/flutter/.pub-cache/hosted/pub.dartlang.org/url_launcher_ios-6.0.18/
+url_launcher_linux=/Users/quizplus/Development/flutter/.pub-cache/hosted/pub.dartlang.org/url_launcher_linux-3.0.3/
+url_launcher_macos=/Users/quizplus/Development/flutter/.pub-cache/hosted/pub.dartlang.org/url_launcher_macos-3.0.3/
+url_launcher_web=/Users/quizplus/Development/flutter/.pub-cache/hosted/pub.dartlang.org/url_launcher_web-2.0.15/
+url_launcher_windows=/Users/quizplus/Development/flutter/.pub-cache/hosted/pub.dartlang.org/url_launcher_windows-3.0.4/
